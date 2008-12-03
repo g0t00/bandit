@@ -10,11 +10,13 @@ namespace Bandit
     {
         private const int max = 10;
         private const int min = 1;
+        private const long correctpertick = 150000;
         private const int verschiebungstart = 30;
-        private int letzteZeit;
+        private long dZeit, lZeit;
         private int drittel;
         private int[] Zahl;
         public bool running;
+        public durchschnitt tZwischenF = new durchschnitt();
         private bool auslaufen;
         private int dx = 0;
         private int verschiebung;
@@ -29,12 +31,18 @@ namespace Bandit
         public void stoppen()
         {
             auslaufen = true;
+           // MessageBox.Show(Convert.ToString(tZwischenF.getDurchschnitt()));
         }
         public void nextNumber()
         {
-            //long dzeit = letzteZeit - DateTime.Now.Ticks();
+            dZeit = DateTime.Now.Ticks - lZeit;
+            lZeit = DateTime.Now.Ticks;
+            tZwischenF.hinzufuegen(dZeit);
             if (verschiebung > 0 && running) {
-                dx += verschiebung/3;
+                dx += (verschiebung/3)*Convert.ToInt32(dZeit / correctpertick);
+                if (dZeit / correctpertick > 1.5 || dZeit / correctpertick < 0.5)
+                {
+                }
                 if (dx >= drittel)
                 {
                     Zahl[2] = Zahl[1];
@@ -82,7 +90,7 @@ namespace Bandit
         public void starten(int button)
         {
             Random zufall = new Random(button);
-            //letzteZeit = DateTime.Now.Ticks;
+            lZeit = DateTime.Now.Ticks;
             running = true;
             Zahl = new int[3];
             Zahl[0] = 1; //zufall.Next(min, max-2);
