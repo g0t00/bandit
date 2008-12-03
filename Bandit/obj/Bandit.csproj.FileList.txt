@@ -1,0 +1,8 @@
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\Bandit.Form1.resources
+obj\Debug\Bandit.Properties.Resources.resources
+obj\Debug\Bandit.csproj.GenerateResource.Cache
+bin\Debug\Bandit.exe
+bin\Debug\Bandit.pdb
+obj\Debug\Bandit.exe
+obj\Debug\Bandit.pdb
