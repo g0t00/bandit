@@ -13,6 +13,7 @@ namespace Bandit
         private Bitmap b;
         private Font myFont;
         private Brush myBrush;
+        private string Zahl;
         public Point getPosition()
         {
             return Position;
@@ -20,26 +21,41 @@ namespace Bandit
         public void set(Font newFont)
         {
             myFont = newFont;
+            redraw();
         }
         public void set(Brush newBrush)
         {
             myBrush = newBrush;
+            redraw();
         }
         public void set(Font newFont, Brush newBrush)
         {
             set(newBrush);
             set(newFont);
         }
+        public void set(string newZahl)
+        {
+            Zahl = newZahl;
+            redraw();
+        }
         public void set(string Zahl, Font newFont, Brush newBrush)
         {
             set(newFont, newBrush);
             set(Zahl);
         }
-        public void set(string Zahl)
+        public void set(Image newImage)
         {
-            b = new Bitmap(100, 100);
+            b = new Bitmap(newImage);
+            
+            redraw();
+        }
+        public virtual void redraw()
+        {
+            //b = new Bitmap(100, 100);
+
             g = Graphics.FromImage(b);
-            g.DrawString(Zahl, myFont, myBrush, 0, 0);
+            g.ScaleTransform(0.5F, 0.5F);
+            //g.DrawString(Zahl, myFont, myBrush, 0, 0);
         }
         public Bitmap Anzeige()
         {

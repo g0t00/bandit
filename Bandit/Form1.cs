@@ -31,7 +31,6 @@ namespace Bandit
                 myWalze.AutoSize = true;
                 myWalze.Location = new Point((this.Size.Width/anzWalzen)*(i), 35);
                 myWalze.Size = new Size(100, 300);
-                myWalze.Scale(1);
                 myWalze.TabIndex = 0;
                 Walzen[i] = myWalze;
                 this.Controls.Add(Walzen[i]);

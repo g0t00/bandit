@@ -8,40 +8,42 @@ namespace Bandit
 {
     class Walze : PictureBox
     {
-        private const int max = 9;
+        #region Deklarationen
+        private const int max = 4;
         private Zeichen[] myZeichen = new Zeichen[max];
         private const int AnzZeichenAnzeige = 3;
+        private const int height = 300;
         private const int min = 1;
         private const long correctpertick = 150000;
-        private const int verschiebungstart = 30;
+        private const double verschiebungstart = 0.6;
         private long dZeit, lZeit;
-        private int drittel;
+        //private int drittel;
         private int[] Zahl;
         public bool running;
         public durchschnitt tZwischenF = new durchschnitt();
         private bool auslaufen;
         private int dx = 0;
-        private int verschiebung;
+        private double verschiebung;
         private Timer zaehler;
         Graphics g;
         private Font myFont = new System.Drawing.Font("Microsoft Sans Serif", 80.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+        #endregion
         public Walze()
         {
-            MessageBox.Show(this.Size.ToString());
             zaehler = new System.Windows.Forms.Timer();
             zaehler.Interval = 1;
             zaehler.Tick += new EventHandler(zaehler_Tick);
             for (int i = 0; i < max; i++)
             {
                 myZeichen[i] = new Zeichen();
-                myZeichen[i].set(Convert.ToString(i+1) + 1, myFont, Brushes.Black);
-                myZeichen[i].setPosition(new Point(0, (100) * i));
+                Bitmap b = new Bitmap(Convert.ToString(i + 1)+".png");
+                myZeichen[i].set(b);
+                myZeichen[i].setPosition(new Point(0, (height/3) * i));
             }
         }
         public void stoppen()
         {
             auslaufen = true;
-           // MessageBox.Show(Convert.ToString(tZwischenF.getDurchschnitt()));
         }
         public void nextNumber()
         {
@@ -49,13 +51,26 @@ namespace Bandit
             lZeit = DateTime.Now.Ticks;
             tZwischenF.hinzufuegen(dZeit);
             if (verschiebung > 0 && running) {
-                dx = verschiebung /** (int)dZeit*/;
+                dx = (int)(verschiebung * (int)dZeit / 10000);
                 foreach (Zeichen thisZeichen in myZeichen)
                 {
                     thisZeichen.increaseYPosition(dx);
-                    if (thisZeichen.getPosition().Y >= (100) * (max - 1))
+                    if (thisZeichen.getPosition().Y >= (height/3) * (max-1))
                     {
-                        thisZeichen.setYPosition(0);
+                        thisZeichen.setYPosition(-height/3);
+                    }
+                    if (thisZeichen.getPosition().Y > (height / 6) && thisZeichen.getPosition().Y < height / 3 * 2-(height/6))
+                    {
+                        thisZeichen.set(Brushes.Red);
+                    }
+                    else
+                    {
+                        thisZeichen.set(Brushes.Black);
+                    }
+                    if ((int)thisZeichen.getPosition().Y == height / 3 && auslaufen)
+                    {
+                        running = false;
+                        auslaufen = false;
                     }
                 }
                 //if (dx >= drittel)
@@ -69,15 +84,15 @@ namespace Bandit
             }
             if (auslaufen)
             {
-                if (verschiebung > 10)
+                if (verschiebung > verschiebungstart/3)
                 {
-                    verschiebung--;
-                }else if (dx >= drittel/2 - 5)
+                    verschiebung -= 0.0005*(((double)dZeit) / 10000);
+                }/*else if (dx >= height/3)
                 {
-                    dx = drittel/2;
+                    dx = height / 3;
                     running = false;
                     auslaufen = false;
-                }
+                }*/
             }
 
             zeichnen();
@@ -92,7 +107,8 @@ namespace Bandit
             g = Graphics.FromImage(b);
             foreach (Zeichen thisZeichen in myZeichen)
             {
-                g.DrawImage(thisZeichen.Anzeige(), thisZeichen.getPosition());
+                //g.DrawImage(thisZeichen.Anzeige(), thisZeichen.getPosition());
+                g.DrawImage(thisZeichen.Anzeige(), new Rectangle(thisZeichen.getPosition(), new Size(100, 100)));
             }
             //drittel = (this.Size.Height) / 3;
             //drittel = drittel * 2;
@@ -100,8 +116,8 @@ namespace Bandit
             //g.DrawString(Convert.ToString(Zahl[0]), myFont, Brushes.Black, 0, dx - drittel);
             //g.DrawString(Convert.ToString(Zahl[1]), myFont, Brushes.Red, 0, dx);
             //g.DrawString(Convert.ToString(Zahl[2]), myFont, Brushes.Black, 0, dx + (drittel));
-            //g.DrawLine(Pens.Black, 0, drittel/2, this.Size.Width, drittel/2);
-            //g.DrawLine(Pens.Black, 0, (this.Size.Height / 3) * 2, this.Size.Width, (this.Size.Height / 3) * 2);
+            g.DrawLine(Pens.Black, 0, height / 3, this.Size.Width, height / 3);
+            g.DrawLine(Pens.Black, 0, height / 3*2, this.Size.Width, height / 3*2);
 
             this.Image = b;
         }
