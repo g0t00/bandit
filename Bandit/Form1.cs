@@ -12,7 +12,9 @@ namespace Bandit
     {
         //public static Label[] Anzeige = new Label[3];
         public const int anzWalzen = 3;
+        public decimal Guthaben;
         static Walze[] Walzen;
+        public bool running = false;
         static Timer stopper = new Timer();
         public Form1()
         {
@@ -24,6 +26,7 @@ namespace Bandit
         {
             Anzeige.Visible = false;
             Walze myWalze;
+            GuthabenAendern(1m);
             Walzen = new Walze[anzWalzen];
             for (int i = 0; i <= anzWalzen-1; i++)
             {
@@ -73,12 +76,25 @@ namespace Bandit
 
         private void Start_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i <= anzWalzen-1; i++)
+            if (!running)
             {
-                Walzen[i].starten(i);
+                if (Guthaben >= 0.5m)
+                {
+                    GuthabenAendern(Guthaben - 0.5m);
+                    Start.Enabled = false;
+                    for (int i = 0; i <= anzWalzen - 1; i++)
+                    {
+                        Walzen[i].starten(i);
+                    }
+                    stopper.Stop();
+                    Anzeige.Visible = false;
+                }
+                else
+                {
+                    Anzeige.Visible = true;
+                    Anzeige.Text = "Zuwenig Guthaben vorhanden. Mindestens: " + String.Format("{0:C}", 0.5m);
+                }
             }
-            stopper.Stop();
-            Anzeige.Visible = false;
         }
 
         private void Stopp1_Click(object sender, EventArgs e)
@@ -97,10 +113,8 @@ namespace Bandit
         }
         private void stoppen(int Walzenid)
         {
-                stopper.Interval = 1;
-                stopper.Tick += new EventHandler(Auswerten);
-                stopper.Start();
-                Walzen[Walzenid].stoppen();
+            Walzen[Walzenid].ausgelaufen += new EventHandler(Auswerten);
+            Walzen[Walzenid].stoppen();
         }
         private void Auswerten(object sender, EventArgs e)
         {
@@ -113,22 +127,41 @@ namespace Bandit
                 if (fertig)
                 {
                     int last = Walzen[0].getZahl();
-                    bool gewonnen = false;
+                    bool gewonnen = true;
                     for (int i = 1; i <= anzWalzen - 1; i++)
                     {
+                        if(Walzen[i].getZahl() != last)
                         gewonnen = (Walzen[i].getZahl() == last);
                     }
                     if (gewonnen)
                     {
                         Anzeige.Text = "Gewonnen";
                         Anzeige.Visible = true;
+                        GuthabenAendern(Guthaben + 2m);
                     }
                     else
                     {
                         Anzeige.Text = "Verloren";
                         Anzeige.Visible = true;
                     }
+                    running = false;
+                    Start.Enabled = true;
             }
+        }
+
+        private void GuthabenAendern(decimal neuesGuthaben)
+        {
+            Guthaben = neuesGuthaben;
+            GuthabenAnzeige.Text = "Guthaben: " + String.Format("{0:C}", Guthaben);
+        }
+        private void einEurobutton_Click(object sender, EventArgs e)
+        {
+            GuthabenAendern(Guthaben + 1m);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            GuthabenAendern(Guthaben + 1m);
         }
         
 

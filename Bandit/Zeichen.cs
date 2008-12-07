@@ -11,38 +11,41 @@ namespace Bandit
         private Point Position;
         private Graphics g;
         private Bitmap b;
-        private Font myFont;
-        private Brush myBrush;
-        private string Zahl;
+        public int IconId;
+        //private Font myFont;
+        //private Brush myBrush;
+        //private string Zahl;
         public Point getPosition()
         {
             return Position;
         }
-        public void set(Font newFont)
-        {
-            myFont = newFont;
-            redraw();
-        }
-        public void set(Brush newBrush)
-        {
-            myBrush = newBrush;
-            redraw();
-        }
-        public void set(Font newFont, Brush newBrush)
-        {
-            set(newBrush);
-            set(newFont);
-        }
-        public void set(string newZahl)
-        {
-            Zahl = newZahl;
-            redraw();
-        }
-        public void set(string Zahl, Font newFont, Brush newBrush)
-        {
-            set(newFont, newBrush);
-            set(Zahl);
-        }
+        #region unnütz gewordene set overwrites
+        //public void set(Font newFont)
+        //{
+        //    myFont = newFont;
+        //    redraw();
+        //}
+        //public void set(Brush newBrush)
+        //{
+        //    myBrush = newBrush;
+        //    redraw();
+        //}
+        //public void set(Font newFont, Brush newBrush)
+        //{
+        //    set(newBrush);
+        //    set(newFont);
+        //}
+        //public void set(string newZahl)
+        //{
+        //    Zahl = newZahl;
+        //    redraw();
+        //}
+        //public void set(string Zahl, Font newFont, Brush newBrush)
+        //{
+        //    set(newFont, newBrush);
+        //    set(Zahl);
+        //}
+        #endregion
         public void set(Image newImage)
         {
             b = new Bitmap(newImage);
@@ -54,7 +57,7 @@ namespace Bandit
             //b = new Bitmap(100, 100);
 
             g = Graphics.FromImage(b);
-            g.ScaleTransform(0.5F, 0.5F);
+           // g.ScaleTransform(0.5F, 0.5F);
             //g.DrawString(Zahl, myFont, myBrush, 0, 0);
         }
         public Bitmap Anzeige()

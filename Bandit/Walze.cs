@@ -18,9 +18,10 @@ namespace Bandit
         private const double verschiebungstart = 0.6;
         private long dZeit, lZeit;
         //private int drittel;
-        private int[] Zahl;
+        private int IconId;
         public bool running;
         public durchschnitt tZwischenF = new durchschnitt();
+        public event EventHandler ausgelaufen;
         private bool auslaufen;
         private int dx = 0;
         private double verschiebung;
@@ -36,6 +37,7 @@ namespace Bandit
             for (int i = 0; i < max; i++)
             {
                 myZeichen[i] = new Zeichen();
+                myZeichen[i].IconId = i;
                 Bitmap b = new Bitmap(Convert.ToString(i + 1)+".png");
                 myZeichen[i].set(b);
                 myZeichen[i].setPosition(new Point(0, (height/3) * i));
@@ -59,47 +61,33 @@ namespace Bandit
                     {
                         thisZeichen.setYPosition(-height/3);
                     }
-                    if (thisZeichen.getPosition().Y > (height / 6) && thisZeichen.getPosition().Y < height / 3 * 2-(height/6))
-                    {
-                        thisZeichen.set(Brushes.Red);
-                    }
-                    else
-                    {
-                        thisZeichen.set(Brushes.Black);
-                    }
+                   
                     if ((int)thisZeichen.getPosition().Y == height / 3 && auslaufen)
                     {
                         running = false;
                         auslaufen = false;
+                        IconId = thisZeichen.IconId;
+                        if (ausgelaufen != null)
+                        {
+                            ausgelaufen(this, new EventArgs());
+                        }
                     }
                 }
-                //if (dx >= drittel)
-                //{
-                //    Zahl[2] = Zahl[1];
-                //    Zahl[1] = Zahl[0];
-                //    if (++Zahl[0] == max - 1)
-                //        Zahl[0] = 1;
-                //    dx = 0;
-                //}
+                
             }
             if (auslaufen)
             {
                 if (verschiebung > verschiebungstart/3)
                 {
                     verschiebung -= 0.0005*(((double)dZeit) / 10000);
-                }/*else if (dx >= height/3)
-                {
-                    dx = height / 3;
-                    running = false;
-                    auslaufen = false;
-                }*/
+                }
             }
 
             zeichnen();
         }
         public int getZahl()
         {
-            return Zahl[1];
+            return IconId;
         }
         private void zeichnen()
         {
@@ -127,10 +115,10 @@ namespace Bandit
             Random zufall = new Random(button);
             lZeit = DateTime.Now.Ticks;
             running = true;
-            Zahl = new int[3];
+            /*Zahl = new int[3];
             Zahl[0] = 1; //zufall.Next(min, max-2);
             Zahl[1] = Zahl[0] + 1;
-            Zahl[2] = Zahl[1] + 1;
+            Zahl[2] = Zahl[1] + 1;*/
             auslaufen = false;
             this.zaehler.Start();
             verschiebung = verschiebungstart;
