@@ -34,14 +34,7 @@ namespace Bandit
             zaehler = new System.Windows.Forms.Timer();
             zaehler.Interval = 1;
             zaehler.Tick += new EventHandler(zaehler_Tick);
-            for (int i = 0; i < max; i++)
-            {
-                myZeichen[i] = new Zeichen();
-                myZeichen[i].IconId = i;
-                Bitmap b = new Bitmap(Convert.ToString(i + 1)+".png");
-                myZeichen[i].set(b);
-                myZeichen[i].setPosition(new Point(0, (height/3) * i));
-            }
+            
         }
         public void stoppen()
         {
@@ -62,7 +55,7 @@ namespace Bandit
                         thisZeichen.setYPosition(-height/3);
                     }
                    
-                    if ((int)thisZeichen.getPosition().Y == height / 3 && auslaufen)
+                    if (((int)thisZeichen.getPosition().Y > height / 3 && (int)thisZeichen.getPosition().Y < height / 3+5)&& auslaufen)
                     {
                         running = false;
                         auslaufen = false;
@@ -72,6 +65,7 @@ namespace Bandit
                             ausgelaufen(this, new EventArgs());
                         }
                     }
+                    
                 }
                 
             }
@@ -112,6 +106,14 @@ namespace Bandit
 
         public void starten(int button)
         {
+            for (int i = 0; i < max; i++)
+            {
+                myZeichen[i] = new Zeichen();
+                myZeichen[i].IconId = i;
+                Bitmap b = new Bitmap(Convert.ToString(i + 1) + ".png");
+                myZeichen[i].set(b);
+                myZeichen[i].setPosition(new Point(0, (height / 3) * i));
+            }
             Random zufall = new Random(button);
             lZeit = DateTime.Now.Ticks;
             running = true;
@@ -122,10 +124,20 @@ namespace Bandit
             auslaufen = false;
             this.zaehler.Start();
             verschiebung = verschiebungstart;
+           
         }
         private void zaehler_Tick(object sender, EventArgs e)
         {
-            nextNumber();
+           nextNumber();
+        }
+
+        private void InitializeComponent()
+        {
+            ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
+            this.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
+            this.ResumeLayout(false);
+
         }
                     
     }

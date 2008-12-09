@@ -161,7 +161,7 @@ namespace Bandit
 
         private void button2_Click(object sender, EventArgs e)
         {
-            GuthabenAendern(Guthaben + 1m);
+            GuthabenAendern(Guthaben + 2m);
         }
         
 
